@@ -823,6 +823,7 @@ odoo.define("pos_multi_session", function(require) {
             }
         },
     });
+    exports.models = models;
     var OrderlineSuper = models.Orderline;
     models.Orderline = models.Orderline.extend({
         initialize: function() {
