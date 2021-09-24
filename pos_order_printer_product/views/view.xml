@@ -28,7 +28,6 @@
             <xpath expr="//page[@name='sales']" position="after">
                 <page
                     string="Printers"
-                    attrs="{'invisible':[('available_in_pos','=',False)]}"
                     name="printers"
                 >
                     <field name="printers_ids" />

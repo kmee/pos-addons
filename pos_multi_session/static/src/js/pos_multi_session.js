@@ -338,7 +338,12 @@ odoo.define("pos_multi_session", function(require) {
                         self.multi_session.request_sync_all();
                     }
                     if (order && action === "remove_order") {
-                        order.destroy({reason: "abandon"});
+                        if (this.get_order() === order) {
+                            this.gui.show_screen('floors');
+                            order.destroy({reason: "abandon"});
+                        } else {
+                            order.destroy({reason: "abandon"});
+                        }
                     } else if (action === "update_order") {
                         this.ms_update_order(order, data);
                     }
