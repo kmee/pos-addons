@@ -475,4 +475,6 @@ odoo.define("pos_multi_session_restaurant", function(require) {
             }
         },
     });
+
+    return floors
 });
