@@ -19,7 +19,8 @@ try:
     from odoo.addons.hw_escpos.controllers.main import EscposProxy
     from odoo.addons.hw_escpos.controllers.main import EscposDriver
     from odoo.addons.hw_escpos.escpos.printer import Network
-    import odoo.addons.hw_proxy.controllers.main as hw_proxy
+#    import odoo.addons.hw_proxy.controllers.main as hw_proxy
+    from odoo.addons.hw_drivers.controllers import proxy
 except ImportError:
     EscposProxy = object
     EscposDriver = object
@@ -138,6 +139,27 @@ class EscposNetworkDriver(EscposDriver):
                             # add a missed order to queue
                             time.sleep(3)
                             self.queue.put((timestamp, task, data))
+
+
+                elif task == 'cashbox':
+                    network_printer_ip = data
+                    printer_info = self.get_network_printer(network_printer_ip)
+                    printer = self.printer_objects.get(network_printer_ip, None)
+                    if printer_info and printer_info['status'] == 'online' and printer:
+                        _logger.info('Opening cashbox on printer %s...', network_printer_ip)
+                        try:
+                            printer.cashdraw(2)
+                            printer.cashdraw(5)
+                        except socket.error:
+                            printer.open()
+                            printer.cashdraw(2)
+                            printer.cashdraw(5)
+                        _logger.info('Done opening cashbox on printer %s', network_printer_ip)
+                    else:
+                        _logger.error('cashbox: printer offline!')
+
+
+
                 elif task == "printstatus":
                     pass
                 elif task == "status":
@@ -175,7 +197,7 @@ class EscposNetworkDriver(EscposDriver):
 # original driver runs in parallel and deals with USB printers
 network_driver = EscposNetworkDriver()
 
-hw_proxy.drivers["escpos_network"] = network_driver
+proxy.proxy_drivers["escpos_network"] = network_driver
 
 # this will also start the message handling loop
 network_driver.push_task("printstatus")
@@ -197,3 +219,8 @@ class UpdatedEscposProxy(EscposProxy):
     @http.route("/hw_proxy/status_network_printers", type="json", auth="none", cors="*")
     def network_printers_status(self):
         return network_driver.network_printers
+
+    @http.route('/hw_proxy/open_cashbox', type='json', auth='none', cors='*')
+    def open_cashbox(self, proxy=None):
+        network_driver.push_task('cashbox', '10.0.2.179')
+

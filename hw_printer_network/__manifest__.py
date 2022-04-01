@@ -7,11 +7,11 @@
     "summary": """Hardware Driver for Network Printers""",
     "category": "Point of Sale",
     "images": [],
-    "version": "12.0.2.0.1",
+    "version": "13.0.2.0.1",
     "application": False,
     "author": "IT-Projects LLC, Dinar Gabbasov",
-    "support": "apps@itpp.dev",
-    "website": "https://apps.odoo.com/apps/modules/12.0/hw_printer_network/",
+    "support": "pos@it-projects.info",
+    "website": "https://apps.odoo.com/apps/modules/13.0/hw_printer_network/",
     "license": "Other OSI approved licence",  # MIT
     "price": 59.00,
     "currency": "EUR",
@@ -24,5 +24,5 @@
     "pre_init_hook": None,
     "post_init_hook": None,
     "auto_install": False,
-    "installable": True,
+    "installable": False,
 }
