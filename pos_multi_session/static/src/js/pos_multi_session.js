@@ -872,7 +872,9 @@ odoo.define("pos_multi_session", function(require) {
             }
             this.ms_info = data.ms_info || {};
             if (typeof data.qty !== "undefined" && data.qty !== this.quantity) {
+                this.mp_dirty = true;
                 this.set_quantity(data.qty);
+                this.mp_dirty = false;
             }
             if (
                 typeof data.price_unit !== "undefined" &&
