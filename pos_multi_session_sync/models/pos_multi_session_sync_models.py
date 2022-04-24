@@ -226,11 +226,17 @@ class PosMultiSessionSync(models.Model):
             pos.unlink()
             pos = None
         if not pos:
+            current_session_ids = self.env["pos_multi_session_sync.pos"].search(
+                [('multi_session_ID', '=', self.multi_session_ID)]
+            )
+            max_multi_session_message_ID = max(current_session_ids.mapped('multi_session_message_ID') or [1])
+
             pos = self.env["pos_multi_session_sync.pos"].create(
                 {
                     "multi_session_ID": self.multi_session_ID,
                     "pos_ID": pos_ID,
                     "user_ID": user_ID,
+                    "multi_session_message_ID": max_multi_session_message_ID,
                 }
             )
         if pos.user_ID != user_ID:
