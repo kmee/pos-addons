@@ -94,6 +94,7 @@ odoo.define("pos_multi_session", function(require) {
     var PosModelSuper = models.PosModel;
     models.PosModel = models.PosModel.extend({
         initialize: function() {
+            console.log("Initialize: MS");
             var self = this;
             var ms_model = {
                 model: "pos.multi_session",
@@ -120,6 +121,7 @@ odoo.define("pos_multi_session", function(require) {
             PosModelSuper.prototype.initialize.apply(this, arguments);
             if (!this.message_ID) {
                 this.message_ID = 0;
+                console.log("Initialize: Message_ID = 0");
             }
             this.multi_session = false;
             this.ms_syncing_in_progress = false;
@@ -127,41 +129,52 @@ odoo.define("pos_multi_session", function(require) {
                 this.stringify_logs = true;
             }
             this.ready.then(function() {
-                if (!self.multi_session_active) {
-                    return;
-                }
-                self.get("orders").bind("remove", function(order, collection, options) {
-                    if (!self.multi_session.client_online) {
-                        if (order.order_on_server) {
-                            self.multi_session.no_connection_warning();
-                            if (self.debug) {
-                                console.log("PosModel initialize error");
-                            }
-                            return false;
-                        }
-                    }
-                    order.order_removing_to_send();
-                });
-                var channel_name = "pos.multi_session";
-                var callback = self.updates_from_server_callback;
-                self.bus.add_channel_callback(channel_name, callback, self);
-                if (self.config.sync_server) {
-                    self.add_bus("sync_server", self.config.sync_server);
-                    self.get_bus("sync_server").add_channel_callback(
-                        channel_name,
-                        callback,
-                        self
-                    );
-                    self.sync_bus = self.get_bus("sync_server");
-                    self.get_bus("sync_server").start();
-                } else {
-                    self.sync_bus = self.get_bus();
-                    if (!self.config.autostart_longpolling) {
-                        self.sync_bus.start();
-                    }
-                }
-                self.multi_session.bind_ms_connection_events();
+                self.initialize_updates_from_server_callback();
             });
+            console.log("Initialize: END");
+        },
+        initialize_updates_from_server_callback: function (){
+            var self = this;
+            if (!self.multi_session_active) {
+                console.log("Initialize: ready / NO multi_session_active");
+                return;
+            }
+            self.get("orders").bind("remove", function(order, collection, options) {
+                if (!self.multi_session.client_online) {
+                    if (order.order_on_server) {
+                        self.multi_session.no_connection_warning();
+                        console.log("PosModel initialize error");
+                        return false;
+                    }
+                    console.log("PosModel initialize ok 1");
+                }
+                console.log("PosModel initialize ok 2");
+                order.order_removing_to_send();
+            });
+            var channel_name = "pos.multi_session";
+            var callback = self.updates_from_server_callback;
+            self.bus.add_channel_callback(channel_name, callback, self);
+            console.log("PosModel initialize ok 3");
+            if (self.config.sync_server) {
+                console.log("PosModel initialize ok 4");
+                self.add_bus("sync_server", self.config.sync_server);
+                self.get_bus("sync_server").add_channel_callback(
+                    channel_name,
+                    callback,
+                    self
+                );
+                self.sync_bus = self.get_bus("sync_server");
+                self.get_bus("sync_server").start();
+            } else {
+                console.log("PosModel initialize ok - 5 else");
+                self.sync_bus = self.get_bus();
+                if (!self.config.autostart_longpolling) {
+                    self.sync_bus.start();
+                }
+            }
+            console.log("PosModel initialize ok 6");
+            self.multi_session.bind_ms_connection_events();
+            console.log("PosModel initialize ok 7");
         },
         after_load_server_data: function() {
             var self = this;
