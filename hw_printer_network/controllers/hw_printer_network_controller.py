@@ -139,7 +139,21 @@ class EscposNetworkDriver(EscposDriver):
                             # add a missed order to queue
                             time.sleep(3)
                             self.queue.put((timestamp, task, data))
-
+                elif task == 'cashbox':
+                    printer_info = self.get_network_printer(data)
+                    printer = self.printer_objects.get(data, None)
+                    if printer_info and printer_info['status'] == 'online' and printer:
+                        _logger.info('Opening cashbox on printer %s...', data)
+                        try:
+                            printer.cashdraw(2)
+                            printer.cashdraw(5)
+                        except socket.error:
+                            printer.open()
+                            printer.cashdraw(2)
+                            printer.cashdraw(5)
+                        _logger.info('Done opening cashbox on printer %s', data)
+                    else:
+                        _logger.error('cashbox: printer offline!')
 
                 elif task == 'cashbox':
                     network_printer_ip = data
@@ -207,6 +221,7 @@ class UpdatedEscposProxy(EscposProxy):
     @http.route("/hw_proxy/print_xml_receipt", type="json", auth="none", cors="*")
     def print_xml_receipt(self, receipt, proxy=None):
         if proxy:
+            _logger.info('print_xml_receipt proxy %s', proxy)
             network_driver.push_task("xml_receipt", (receipt, proxy))
         else:
             super(UpdatedEscposProxy, self).print_xml_receipt(receipt)
@@ -222,5 +237,10 @@ class UpdatedEscposProxy(EscposProxy):
 
     @http.route('/hw_proxy/open_cashbox', type='json', auth='none', cors='*')
     def open_cashbox(self, proxy=None):
-        network_driver.push_task('cashbox', '10.0.2.179')
+        _logger.info('Open cashbox via network printer')
+        network_driver.push_task('cashbox', '10.0.2.73')
 
+    @http.route('/hw_proxy/without_usb', type='http', auth='none', cors='*')
+    def without_usb(self):
+        """ Old pos_printer_network module expects this to work """
+        return "ping"
