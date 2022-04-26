@@ -262,7 +262,8 @@ odoo.define("pos_multi_session", function(require) {
                 } else if (this.ms_syncing_in_progress) {
                     if (
                         this.get("orders").size() === 0 &&
-                        this.gui.get_current_screen() !== "floors"
+                        this.gui.get_current_screen() !== "floors" &&
+                        this.gui.get_current_screen() !== "login"
                     ) {
                         this.add_new_order();
                     } else {
