@@ -1069,6 +1069,10 @@ odoo.define("pos_multi_session", function(require) {
                             self.no_connection_warning();
                             self.start_offline_sync_timer();
                         }
+                    } else if (message.action === "remove_order") {
+                        self.update_queue.then(function () {
+                            self.send(message);
+                        });
                     } else {
                         self.request_sync_all();
                     }
