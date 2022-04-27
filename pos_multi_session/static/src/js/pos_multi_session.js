@@ -1098,6 +1098,10 @@ odoo.define("pos_multi_session", function(require) {
                             if (removed_order) {
                                 removed_order.destroy({reason: "abandon"});
                             }
+                        } else if (message.action === "remove_order") {
+                            self.update_queue.then(function () {
+                                self.send(message);
+                            });
                         } else {
                             var warning_message = _t(
                                 "There is a conflict during synchronization, try your action again"
