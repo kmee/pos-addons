@@ -71,7 +71,6 @@ odoo.define("pos_product_available.PosModel", function(require) {
                 self.refresh_qty_available(product);
             });
             // Compatibility with pos_multi_session
-            order.trigger("new_updates_to_send");
         },
         after_load_server_data: function() {
             var self = this;
