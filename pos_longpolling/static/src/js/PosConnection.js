@@ -119,17 +119,16 @@ odoo.define("pos_longpolling.PosConnection", function(require) {
             }
             if (Array.isArray(channel) && channel[1] in self.channel_callbacks) {
                 try {
+                    console.log("on_notification_do");
                     var callback = self.channel_callbacks[channel[1]];
                     if (callback) {
-                        if (self.pos.debug) {
-                            console.log(
-                                "POS LONGPOLLING",
-                                self.service,
-                                self.pos.config.name,
-                                channel[1],
-                                JSON.stringify(message)
-                            );
-                        }
+                        console.log(
+                            "POS LONGPOLLING",
+                            self.service,
+                            self.pos.config.name,
+                            channel[1],
+                            JSON.stringify(message)
+                        );
                         return callback(message);
                     }
                 } catch (err) {
