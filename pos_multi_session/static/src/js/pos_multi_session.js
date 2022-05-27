@@ -1102,7 +1102,9 @@ odoo.define("pos_multi_session", function(require) {
                             self.warning(warning_message);
                             if (message.action === "remove_order") {
                                 self.update_queue.then(function () {
+                                    message.data.revision_ID += 1;
                                     self.send(message);
+                                    message.data.revision_ID -= 1;
                                 });
                             } else {
                                 self.request_sync_all({uid: res.order_uid});
