@@ -21,6 +21,7 @@
         "views/pos_multi_session_sync_menu.xml",
         "views/pos_config_sync_view.xml",
         "views/pos_multi_session_sync_order_view.xml",
+        "views/pos_multi_session_sync_view.xml",
     ],
     "qweb": [],
     "demo": [],
