@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2022 KMEE
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+
+    <record model="ir.ui.view" id="pos_order_sync_form_view">
+        <field name="name">pos.multi.session.order.sync.order.form (in pos_multi_session_sync)</field>
+        <field name="model">pos_multi_session_sync.order</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="order"/>
+                        <field name="nonce"/>
+                        <field name="order_uid"/>
+                        <field name="state"/>
+                    </group>
+                    <group>
+                        <field name="revision_ID"/>
+                        <field name="multi_session_ID"/>
+                        <field name="pos_session_ID"/>
+                        <field name="run_ID"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="pos_order_sync_tree_view">
+        <field name="name">pos.multi.session.order.sync.order.tree (in pos_multi_session_sync)</field>
+        <field name="model">pos_multi_session_sync.order</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="order_uid"/>
+                <field name="revision_ID"/>
+                <field name="pos_session_ID"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="pos_order_sync_act_window">
+        <field name="name">Order Sync</field>
+        <field name="res_model">pos_multi_session_sync.order</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record model="ir.ui.menu" id="pos_order_sync_menu">
+        <field name="name">Order Sync</field>
+        <field name="parent_id" ref="pos_multi_session_sync.pos_multi_session_sync_menu"/>
+        <field name="action" ref="pos_order_sync_act_window"/>
+        <field name="sequence" eval="39"/>
+    </record>
+
+</odoo>

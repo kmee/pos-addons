@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2022 KMEE
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+
+    <record model="ir.ui.menu" id="pos_multi_session_sync_menu">
+        <field name="name">Multi Session Sync</field>
+        <field name="parent_id" ref="point_of_sale.menu_point_config_product"/>
+        <field name="sequence" eval="99"/>
+    </record>
+
+</odoo>

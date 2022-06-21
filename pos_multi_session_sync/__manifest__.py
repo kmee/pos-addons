@@ -15,7 +15,14 @@
     "license": "Other OSI approved licence",  # MIT
     "depends": ["pos_longpolling"],
     "external_dependencies": {"python": [], "bin": []},
-    "data": ["security/ir.model.access.csv"],
+    "data": [
+        "security/ir.model.access.csv",
+
+        "views/pos_multi_session_sync_menu.xml",
+        "views/pos_config_sync_view.xml",
+        "views/pos_multi_session_sync_order_view.xml",
+        "views/pos_multi_session_sync_view.xml",
+    ],
     "qweb": [],
     "demo": [],
     "post_load": None,

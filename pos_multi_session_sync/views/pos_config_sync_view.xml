@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2022 KMEE
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+
+    <record model="ir.ui.view" id="pos_config_sync_form_view">
+        <field name="name">pos.multi.session.sync.pos.form (in pos_multi_session_sync)</field>
+        <field name="model">pos_multi_session_sync.pos</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="multi_session_ID"/>
+                        <field name="multi_session_message_ID"/>
+                        <field name="pos_ID"/>
+                        <field name="user_ID"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="pos_config_sync_tree_view">
+        <field name="name">pos.multi.session.sync.pos.form (in pos_multi_session_sync)</field>
+        <field name="model">pos_multi_session_sync.pos</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="multi_session_ID"/>
+                <field name="multi_session_message_ID"/>
+                <field name="pos_ID"/>
+                <field name="user_ID"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="pos_config_sync_act_window">
+        <field name="name">Config Sync</field>
+        <field name="res_model">pos_multi_session_sync.pos</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record model="ir.ui.menu" id="pos_config_sync_menu">
+        <field name="name">Config Sync</field>
+        <field name="parent_id" ref="pos_multi_session_sync.pos_multi_session_sync_menu"/>
+        <field name="action" ref="pos_config_sync_act_window"/>
+        <field name="sequence" eval="39"/>
+    </record>
+
+</odoo>

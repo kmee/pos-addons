@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2022 KMEE
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+
+    <record model="ir.ui.view" id="pos_multi_session_sync_form_view">
+        <field name="name">pos.multi.session.sync.multi.session.form (in pos_multi_session_sync)</field>
+        <field name="model">pos_multi_session_sync.multi_session</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="multi_session_ID"/>
+                        <field name="order_ID"/>
+                        <field name="run_ID"/>
+                        <field name="dbname"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="pos_multi_session_sync_tree_view">
+        <field name="name">pos.multi.session.sync.multi.session.tree (in pos_multi_session_sync)</field>
+        <field name="model">pos_multi_session_sync.multi_session</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="multi_session_ID"/>
+                <field name="order_ID"/>
+                <field name="run_ID"/>
+                <field name="dbname"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="pos_multi_session_sync_act_window">
+        <field name="name">Multi Session Sync</field>
+        <field name="res_model">pos_multi_session_sync.multi_session</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record model="ir.ui.menu" id="pos_multi_sesion_sync_menu">
+        <field name="name">Multi Session Sync</field>
+        <field name="parent_id" ref="pos_multi_session_sync.pos_multi_session_sync_menu"/>
+        <field name="action" ref="pos_multi_session_sync_act_window"/>
+        <field name="sequence" eval="39"/>
+    </record>
+
+</odoo>
