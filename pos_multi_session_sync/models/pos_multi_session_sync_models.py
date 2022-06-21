@@ -322,6 +322,7 @@ class PosMultiSessionSync(models.Model):
 
     @api.multi
     def send_sync_message(self, message):
+        return 1
         self.ensure_one()
         notifications = []
         channel_name = "pos.multi_session"
@@ -348,6 +349,7 @@ class PosMultiSessionSync(models.Model):
 
     @api.multi
     def broadcast_message(self, message):
+        return 1
         self.ensure_one()
         notifications = []
         channel_name = "pos.multi_session"
