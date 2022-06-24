@@ -67,8 +67,6 @@
 /*  ********* The white header bar ********* */
 .pos.mobile .pos-topheader {
     height: 96px;
-    background: white;
-    border-bottom: solid 3px rgb(196, 196, 196);
     display: -webkit-box;
     display: -ms-flexbox;
     display: -webkit-flex;
@@ -79,9 +77,8 @@
 .pos.mobile .pos-branding {
     border-right: 0px;
     width: initial;
-    position: relative;
     vertical-align: top;
-    display: block;
+    display: flex;
     float: left;
 }
 .pos.mobile .pos-branding .username {
@@ -89,7 +86,6 @@
     margin-right: 20px;
     line-height: 104px;
     float: left;
-    color: #555555;
     /*word-wrap: break-word;*/
     width: initial;
     font-size: 20px;
@@ -98,7 +94,6 @@
 /*  b) The right part of the top-bar */
 .pos.mobile .pos-rightheader {
     display: block;
-    position: relative;
     left: 0px;
     right: 0px;
     float: right;
@@ -171,18 +166,16 @@
 }
 /*  c) The session buttons */
 .pos.mobile .pos-rightheader .header-button {
-    display: inline-block;
     height: 96px;
     padding-left: 32px;
     padding-right: 32px;
-    border-right: 2px solid #292929;
-    border-left: 2px solid #292929;
     line-height: 96px;
     color: #555555;
-    position: absolute;
     right: 0;
     padding: 0px;
     width: 80px;
+    font-size: 40px;
+    display: none;
 }
 .pos.mobile .pos-rightheader .header-button img {
     padding: 10px;
@@ -199,7 +192,6 @@
     line-height: 40px;
     font-size: 40px;
     float: right;
-    display: block;
     padding-left: 15px;
     padding-right: 15px;
 }
