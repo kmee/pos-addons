@@ -98,29 +98,29 @@ odoo.define("pos_mobile_restaurant.floors", function(require) {
         },
     });
 
-    floors.TableGuestsButton.include({
-        button_click: function() {
-            var self = this;
-            if (this.pos.get_order()) {
-                this._super();
-            } else {
-                this.gui.show_popup("number", {
-                    title: _t("Guests ?"),
-                    cheap: true,
-                    value: 0,
-                    confirm: function(value) {
-                        value = Math.max(1, Number(value));
-                        self.pos.add_new_order();
-                        self.pos.get_order().set_customer_count(value);
-                        self.renderElement();
-                    },
-                    cancel: function() {
-                        self.pos.table = null;
-                    },
-                });
-            }
-        },
-    });
+    // floors.TableGuestsButton.include({
+    //     button_click: function() {
+    //         var self = this;
+    //         if (this.pos.get_order()) {
+    //             this._super();
+    //         } else {
+    //             this.gui.show_popup("number", {
+    //                 title: _t("Guests ?"),
+    //                 cheap: true,
+    //                 value: 0,
+    //                 confirm: function(value) {
+    //                     value = Math.max(1, Number(value));
+    //                     self.pos.add_new_order();
+    //                     self.pos.get_order().set_customer_count(value);
+    //                     self.renderElement();
+    //                 },
+    //                 cancel: function() {
+    //                     self.pos.table = null;
+    //                 },
+    //             });
+    //         }
+    //     },
+    // });
 
     return floors;
 });
