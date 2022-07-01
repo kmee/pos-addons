@@ -28,6 +28,9 @@ class PosConfigSync(models.Model):
     pos_ID = fields.Integer(index=True, string="POS")
     user_ID = fields.Integer(index=True)
 
+    date_last_poll = fields.Datetime(string='Date Last Poll')
+    date_last_update = fields.Datetime(string='Date Last Update')
+
 
 class PosMultiSessionSync(models.Model):
     _name = "pos_multi_session_sync.multi_session"
