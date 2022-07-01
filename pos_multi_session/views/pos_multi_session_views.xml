@@ -15,6 +15,10 @@
                 type="text/javascript"
                 src="/pos_multi_session/static/src/js/pos_multi_session.js"
             />
+            <script
+                type="text/javascript"
+                src="/pos_multi_session/static/src/js/longpolling_bus.js"
+            />
             <link
                 rel="stylesheet"
                 href="/pos_multi_session/static/src/css/pos_multi_session.css"
