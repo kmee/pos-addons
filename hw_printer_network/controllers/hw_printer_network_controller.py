@@ -13,13 +13,13 @@ from odoo import http
 
 _logger = logging.getLogger(__name__)
 
-
 try:
     from odoo.addons.hw_escpos.escpos import escpos
     from odoo.addons.hw_escpos.controllers.main import EscposProxy
     from odoo.addons.hw_escpos.controllers.main import EscposDriver
     from odoo.addons.hw_escpos.escpos.printer import Network
-#    import odoo.addons.hw_proxy.controllers.main as hw_proxy
+    from odoo.addons.hw_printer_network.escpos.printer import Cups
+    #    import odoo.addons.hw_proxy.controllers.main as hw_proxy
     from odoo.addons.hw_drivers.controllers import proxy
 except ImportError:
     EscposProxy = object
@@ -113,9 +113,9 @@ class EscposNetworkDriver(EscposDriver):
                 if task == "xml_receipt":
                     error = False
                     if timestamp >= (time.time() - 1 * 60 * 60):
-                        receipt, network_printer_ip = data
-                        printer_info = self.get_network_printer(network_printer_ip)
-                        printer = self.printer_objects.get(network_printer_ip, None)
+                        receipt, cups_printer_name = data
+                        # printer_info = self.get_network_printer(network_printer_ip)
+                        # printer = self.printer_objects.get(network_printer_ip, None)
                         if (
                             printer_info
                             and printer_info["status"] == "online"
@@ -217,12 +217,70 @@ proxy.proxy_drivers["escpos_network"] = network_driver
 network_driver.push_task("printstatus")
 
 
+class EscposCupsDriver(EscposDriver):
+    def __init__(self):
+        self.cups_printers = []
+        self.ping_processes = {}
+        self.printer_objects = {}
+        super(EscposCupsDriver, self).__init__()
+
+    def update_driver_status(self):
+        self.set_status("connected: for printer status se cups")
+
+    def run(self):
+        while True:
+            try:
+                error = True
+                timestamp, task, data = self.queue.get(True)
+                if task == "xml_receipt":
+                    error = False
+                    receipt, printer_name = data
+                    _logger.info("Printing XML receipt on printer %s...")
+                    printer = Cups(printer_name)
+                    printer.open()
+                    printer.receipt(receipt)
+
+                elif task == "printstatus":
+                    pass
+                elif task == "status":
+                    self.update_driver_status()
+                error = False
+            except Exception as e:
+                self.set_status("error", str(e))
+                errmsg = (
+                    str(e)
+                    + "\n"
+                    + "-" * 60
+                    + "\n"
+                    + traceback.format_exc()
+                    + "-" * 60
+                    + "\n"
+                )
+                _logger.error(errmsg)
+            finally:
+                if error:
+                    self.queue.put((timestamp, task, data))
+
+
+# Separate instance, mainloop and queue for network printers
+# original driver runs in parallel and deals with USB printers
+cups_driver = EscposCupsDriver()
+
+proxy.proxy_drivers["escpos_cups"] = cups_driver
+
+# this will also start the message handling loop
+cups_driver.push_task("printstatus")
+
+
 class UpdatedEscposProxy(EscposProxy):
     @http.route("/hw_proxy/print_xml_receipt", type="json", auth="none", cors="*")
-    def print_xml_receipt(self, receipt, proxy=None):
+    def print_xml_receipt(self, receipt, proxy=None, cups=None):
         if proxy:
+            # _logger.info('print_xml_receipt proxy %s', proxy)
+            # network_driver.push_task("xml_receipt", (receipt, proxy))
+        # elif cups:
             _logger.info('print_xml_receipt proxy %s', proxy)
-            network_driver.push_task("xml_receipt", (receipt, proxy))
+            cups_driver.push_task("xml_receipt", (receipt, proxy))
         else:
             super(UpdatedEscposProxy, self).print_xml_receipt(receipt)
 
