@@ -65,7 +65,7 @@ class Controller(BusController):
         res = multi_session.on_update_message(message)
         _logger.debug("Return result after update by user %s: %s", user_ID, res)
 
-        pos = request.env["pos_multi_session_sync.pos"].search(
+        pos = request.env["pos_multi_session_sync.pos"].sudo().search(
             ['&', ("user_ID", "=", user_ID),
              ("multi_session_ID", "=", multi_session_id)])
         pos.sudo().write({
@@ -110,7 +110,7 @@ class Controller(BusController):
         for channel in channels:
             if 'pos.multi_session' in channel:
                 channel = ast.literal_eval(channel)
-                pos = request.env["pos_multi_session_sync.pos"].search([("pos_ID", "=", channel[2])])
+                pos = request.env["pos_multi_session_sync.pos"].sudo().search([("pos_ID", "=", channel[2])])
                 pos_name = request.env["pos.config"].sudo().browse(pos.pos_ID).name
                 if pos.date_last_poll:
                     delta_last_poll = fields.Datetime.now() - pos.date_last_poll
