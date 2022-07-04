@@ -7,6 +7,8 @@ import datetime
 import json
 import logging
 import ast
+import os
+from datetime import timedelta
 
 import odoo
 from odoo import fields
@@ -102,10 +104,20 @@ class Controller(BusController):
         """
         Save the date and time of the last time the poll route was called
         """
+        minutes_poll_limit = os.environ.get('POLL_LIMIT_HEALTH', 2)
+        poll_limit_health = timedelta(minutes=minutes_poll_limit)
+
         for channel in channels:
             if 'pos.multi_session' in channel:
                 channel = ast.literal_eval(channel)
                 pos = request.env["pos_multi_session_sync.pos"].search([("pos_ID", "=", channel[2])])
+                pos_name = request.env["pos.config"].sudo().browse(pos.pos_ID).name
+                if pos.date_last_poll:
+                    delta_last_poll = fields.Datetime.now() - pos.date_last_poll
+                    if delta_last_poll > poll_limit_health:
+                        logging.error(
+                            f"POS {pos_name}: Time since last poll greater than set threshold")
+
                 pos.sudo().write({
                     'date_last_poll': fields.Datetime.now()
                 })
