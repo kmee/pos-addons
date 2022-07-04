@@ -14,5 +14,11 @@ odoo.define('pos_multi_session.Longpolling', function (require) {
                 "Bus inactive (_isActive = false)"
             );
         },
+        _poll: function () {
+            if (!this._isActive) {
+                console.log("_poll: _isActive = false -> stopping _poll cycle");
+            }
+            return this._super();
+        },
     });
 });
