@@ -6,8 +6,12 @@ import copy
 import datetime
 import json
 import logging
+import ast
+import os
+from datetime import timedelta
 
 import odoo
+from odoo import fields
 from odoo.http import request
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
@@ -60,6 +64,14 @@ class Controller(BusController):
         )
         res = multi_session.on_update_message(message)
         _logger.debug("Return result after update by user %s: %s", user_ID, res)
+
+        pos = request.env["pos_multi_session_sync.pos"].search(
+            ['&', ("user_ID", "=", user_ID),
+             ("multi_session_ID", "=", multi_session_id)])
+        pos.sudo().write({
+            'date_last_update': fields.Datetime.now()
+        })
+
         return res
 
     @odoo.http.route("/pos_multi_session/test/gc", type="http", auth="user")
@@ -86,3 +98,28 @@ class Controller(BusController):
         res.unlink()
         ids = json.dumps(ids)
         return ids
+
+    @odoo.http.route('/longpolling/poll', type="json", auth="public")
+    def poll(self, channels, last, options=None):
+        """
+        Save the date and time of the last time the poll route was called
+        """
+        minutes_poll_limit = os.environ.get('POLL_LIMIT_HEALTH', 2)
+        poll_limit_health = timedelta(minutes=minutes_poll_limit)
+
+        for channel in channels:
+            if 'pos.multi_session' in channel:
+                channel = ast.literal_eval(channel)
+                pos = request.env["pos_multi_session_sync.pos"].search([("pos_ID", "=", channel[2])])
+                pos_name = request.env["pos.config"].sudo().browse(pos.pos_ID).name
+                if pos.date_last_poll:
+                    delta_last_poll = fields.Datetime.now() - pos.date_last_poll
+                    if delta_last_poll > poll_limit_health:
+                        logging.error(
+                            f"POS {pos_name}: Time since last poll greater than set threshold")
+
+                pos.sudo().write({
+                    'date_last_poll': fields.Datetime.now()
+                })
+
+        return super(Controller, self).poll(channels, last, options)
