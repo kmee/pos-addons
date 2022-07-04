@@ -55,20 +55,26 @@ class PosSyncStateController(http.Controller):
             <tr>
             <td>&nbsp;Terminal ID</td>
             <td>Poll&nbsp;</td>
+            <td>Poll Delta&nbsp;</td>
             <td>Update&nbsp;</td>
+            <td>Update Delta&nbsp;</td>
             </tr>
             <tr>"""
 
         for pos in pos_ids:
             terminal_id = pos.pos_ID
             date_last_poll = str(pos.date_last_poll)
+            delta_last_poll = fields.Datetime.now() - pos.date_last_poll if pos.date_last_poll else False
             date_last_update = str(pos.date_last_update)
+            delta_last_update = fields.Datetime.now() - pos.date_last_update if pos.date_last_update else False
 
             res += f"""
                 <tr>
                 <td>&nbsp;{terminal_id}</td>
                 <td>&nbsp;{date_last_poll}</td>
+                <td>&nbsp;{delta_last_poll}</td>
                 <td>&nbsp;{date_last_update}</td>
+                <td>&nbsp;{delta_last_update}</td>
                 </tr>
             """
 
