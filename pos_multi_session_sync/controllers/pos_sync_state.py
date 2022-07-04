@@ -25,14 +25,13 @@ class PosSyncStateController(http.Controller):
         pos_ids = http.request.env["pos_multi_session_sync.pos"].sudo().search([])
         res = {}
         for pos in pos_ids:
-            pos_id = http.request.env["pos.config"].sudo().browse(pos.pos_ID)
             health = 'NOK'
             if pos.date_last_poll:
                 delta_last_poll = fields.Datetime.now() - pos.date_last_poll
                 if delta_last_poll < poll_limit_health:
                     health = 'OK'
 
-            res[pos_id.name] = health + " - " + str(pos.date_last_poll)
+            res[pos.pos_ID] = health + " - " + str(pos.date_last_poll)
 
         return res
 
@@ -42,8 +41,7 @@ class PosSyncStateController(http.Controller):
         pos_ids = http.request.env["pos_multi_session_sync.pos"].sudo().search([])
         res = {}
         for pos in pos_ids:
-            pos_id = http.request.env["pos.config"].sudo().browse(pos.pos_ID)
-            res[pos_id.name] = str(pos.date_last_update)
+            res[pos.pos_ID] = str(pos.date_last_update)
 
         return res
 
@@ -55,21 +53,20 @@ class PosSyncStateController(http.Controller):
         res ="""<table border="1" >
             <tbody>
             <tr>
-            <td>&nbsp;Esta&ccedil;&atilde;o</td>
+            <td>&nbsp;Terminal ID</td>
             <td>Poll&nbsp;</td>
             <td>Update&nbsp;</td>
             </tr>
             <tr>"""
 
         for pos in pos_ids:
-            pos_id = http.request.env["pos.config"].sudo().browse(pos.pos_ID)
-            terminal_name = pos_id.name
+            terminal_id = pos.pos_ID
             date_last_poll = str(pos.date_last_poll)
             date_last_update = str(pos.date_last_update)
 
             res += f"""
                 <tr>
-                <td>&nbsp;{terminal_name}</td>
+                <td>&nbsp;{terminal_id}</td>
                 <td>&nbsp;{date_last_poll}</td>
                 <td>&nbsp;{date_last_update}</td>
                 </tr>

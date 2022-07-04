@@ -111,12 +111,11 @@ class Controller(BusController):
             if 'pos.multi_session' in channel:
                 channel = ast.literal_eval(channel)
                 pos = request.env["pos_multi_session_sync.pos"].sudo().search([("pos_ID", "=", channel[2])])
-                pos_name = request.env["pos.config"].sudo().browse(pos.pos_ID).name
                 if pos.date_last_poll:
                     delta_last_poll = fields.Datetime.now() - pos.date_last_poll
                     if delta_last_poll > poll_limit_health:
                         logging.error(
-                            f"POS {pos_name}: Time since last poll greater than set threshold")
+                            f"POS ID {channel[2]}: Time since last poll greater than set threshold")
 
                 pos.sudo().write({
                     'date_last_poll': fields.Datetime.now()
