@@ -117,8 +117,6 @@ class Controller(BusController):
                         logging.error(
                             f"POS ID {channel[2]}: Time since last poll greater than set threshold")
 
-                pos.sudo().write({
-                    'date_last_poll': fields.Datetime.now()
-                })
+                pos.sudo().date_last_poll = fields.Datetime.now()
 
         return super(Controller, self).poll(channels, last, options)
