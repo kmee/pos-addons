@@ -19,6 +19,10 @@
                 type="text/javascript"
                 src="/pos_multi_session/static/src/js/longpolling_bus.js"
             />
+            <script
+                type="text/javascript"
+                src="/pos_multi_session/static/src/js/crosstab_bus.js"
+            />
             <link
                 rel="stylesheet"
                 href="/pos_multi_session/static/src/css/pos_multi_session.css"
