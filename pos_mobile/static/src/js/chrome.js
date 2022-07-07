@@ -37,9 +37,9 @@ odoo.define("pos_mobile.chrome", function(require) {
             summary.detach();
             $(".pos.mobile .order-container").append(summary);
 
-            var pads = $(".leftpane .pads");
-            pads.detach();
-            $(".slide-numpad").append(pads);
+            // var pads = $(".leftpane .pads");
+            // pads.detach();
+            // $(".slide-numpad").append(pads);
 
             var breadcrumbs = $(".breadcrumbs");
             breadcrumbs.detach();
@@ -67,32 +67,32 @@ odoo.define("pos_mobile.chrome", function(require) {
         },
     });
 
-    chrome.HeaderButtonWidget.include({
-        confirm_img: '<img src="/pos_mobile/static/src/img/svg/confirm.svg"/>',
-        cancel_img: '<img src="/pos_mobile/static/src/img/svg/close.svg"/>',
-        renderElement: function() {
-            var self = this;
-            this._super();
-            if (this.action) {
-                this.$el.append(this.cancel_img);
-                this.$el.click(function() {
-                    self.change_action();
-                });
-            }
-        },
-        change_action: function() {
-            var self = this;
-            if (!this.confirmed_change) {
-                this.$el.text("");
-                this.$el.append(self.confirm_img);
-                this.confirmed_change = setTimeout(function() {
-                    self.$el.text("");
-                    self.$el.append(self.cancel_img);
-                    self.confirmed_change = false;
-                }, 2000);
-            }
-        },
-    });
+    // chrome.HeaderButtonWidget.include({
+    //     confirm_img: '<img src="/pos_mobile/static/src/img/svg/confirm.svg"/>',
+    //     cancel_img: '<img src="/pos_mobile/static/src/img/svg/close.svg"/>',
+    //     renderElement: function() {
+    //         var self = this;
+    //         this._super();
+    //         if (this.action) {
+    //             this.$el.append(this.cancel_img);
+    //             this.$el.click(function() {
+    //                 self.change_action();
+    //             });
+    //         }
+    //     },
+    //     change_action: function() {
+    //         var self = this;
+    //         if (!this.confirmed_change) {
+    //             this.$el.text("");
+    //             this.$el.append(self.confirm_img);
+    //             this.confirmed_change = setTimeout(function() {
+    //                 self.$el.text("");
+    //                 self.$el.append(self.cancel_img);
+    //                 self.confirmed_change = false;
+    //             }, 2000);
+    //         }
+    //     },
+    // });
 
     chrome.OrderSelectorWidget.include({
         renderElement: function() {
