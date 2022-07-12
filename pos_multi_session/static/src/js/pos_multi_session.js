@@ -1104,6 +1104,11 @@ odoo.define("pos_multi_session", function(require) {
                                     self.send(message);
                                     message.data.revision_ID -= 1;
                                 });
+                            } else if (message.action === "update_order"){
+                                self.update_queue.then(function () {
+                                    message.data.revision_ID += 1;
+                                    self.send(message);
+                                });
                             } else {
                                 self.request_sync_all({uid: res.order_uid});
                             }
