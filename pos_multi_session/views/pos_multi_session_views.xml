@@ -21,7 +21,7 @@
             />
             <script
                 type="text/javascript"
-                src="/pos_multi_session/static/src/js/crosstab_bus.js"
+                src="/pos_multi_session/static/src/js/gui.js"
             />
             <link
                 rel="stylesheet"
